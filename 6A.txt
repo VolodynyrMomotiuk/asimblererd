@@ -1,0 +1,32 @@
+MODEL SMALL
+STACK 256
+DATASEG
+FileName DB '40.asm',0h
+OkStr DB 'OK','$'
+ErrorStr DB 'Error','$'
+CODESEG
+Start:
+
+mov ax,@data
+mov ds,ax
+mov ah,3dh
+mov al,0
+mov dx, OFFSET FileName
+int 21h
+jc Error
+mov dx,OFFSET OkStr
+jmp Write
+Error:
+mov dx,OFFSET ErrorStr
+Write:
+
+Call WriteStr
+
+Exit:
+mov ah,04Ch
+mov al,0h
+int 21h
+
+INCLUDE function.asm
+
+End Start
