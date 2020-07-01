@@ -1,0 +1,28 @@
+.model small
+.stack 100h
+.data
+num db '0' ;Символ для перевірки
+msg_not db 'Symbol is not number$'
+msg_yes db 'Symbol is number$'
+.code
+start:
+mov ax, @data
+mov ds, ax
+mov al, num ;Завантажуємо число в регістр
+cmp al, '0' ;Порівнюємо з нижньою межею
+jl no ;Якщо код символу менший,
+;переходимо на no
+cmp al, '9' ;Порівнюємо з верхньою межею
+jg no ;Якщо код символу більший,
+;переходимо на no
+lea dx, msg_yes ;Виводимо повідомлення про
+;результат
+jmp print
+no:
+lea dx, msg_not
+print:
+mov ah,09h
+int 21h
+mov ax,4c00h
+int 21h
+end start
