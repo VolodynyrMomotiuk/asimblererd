@@ -1,0 +1,39 @@
+.model small
+.data
+N dw ?
+.stack
+db 128 dup(?)
+.code
+start:
+mov ax,@data
+mov ds,ax
+mov si,1
+mov ah,01h
+int 21h
+cmp al,'+'
+je PERVdigit
+cmp al,'-'
+jne BEZzn
+mov si,0
+PERVdigit: int 21h
+BEZzn: sub al,30h
+cbw
+mov cx,ax
+mov bx,10
+CYKL: mov ah,01h
+int 21h
+cmp al,0dh
+je KONECvvoda
+sub al,30h
+mov ah,0
+xchg ax,cx
+mul bx
+add cx,ax
+jmp CYKL
+KONECvvoda : cmp si,1
+je REZ
+NEG cx
+REZ : mov N,cx
+mov ax,4C00h
+int 21h
+end start
