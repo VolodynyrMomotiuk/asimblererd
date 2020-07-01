@@ -1,0 +1,41 @@
+MASM
+MODEL small
+STACK 256
+.data
+string1 db 'Пошук символу в цьому рядку.',0ah,0dh,'$'
+string2 db 'Пошук символу не в цьому рядку.',0ah,0dh,'$'
+mes_eq db 'Рядки збігаються.',0ah,0dh,'$'
+fnddb 'Неспівпадаючий елемент в регістрі al',0ah,0dh,'$'
+.code
+assume ds:@data,es:@data
+main:
+mov ax,@data
+mov ds,ax
+mov es,ax
+mov ah,09h
+lea dx,string1
+int 21h
+lea dx,string2
+int 21h
+cld
+lea di,string1
+lea si,string2
+mov cx,29
+repe cmps string1,string2
+jcxz eql
+jmp no_eq
+eql:
+mov ah,09h
+lea dx,mes_eq
+int 21h
+jmp exit
+no_eq:
+mov ah,09h
+lea dx,fnd
+int 21h
+dec si
+lods string2
+exit:
+mov ax,4c00h
+int 21h
+end main
